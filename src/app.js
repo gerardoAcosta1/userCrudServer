@@ -2,6 +2,7 @@ import express from "express";
 import db from "./utils/database.js";
 import User from "./models/users.model.js";
 import "dotenv/config";
+import cors from 'cors'
 
 
 User;
@@ -18,11 +19,20 @@ db.sync() // si no existe la tabla -> la crea / si ya existe hace nada
   .then(() => console.log("base de datos sincronizada"))
   .catch((error) => console.log(error));
 
-//
+const whitelist = ['http://localhost:8000', 'http://localhost:5173'];
+
+/*const corsOption = {
+  origin: (origin, cb) => {
+    if(!whitelist.includes(origin)){
+      return cb(new Error('not allowed'))
+    }
+    db(null, true)
+  }
+}*/
 const app = express();
 
 app.use(express.json());
-
+app.use(cors())
 // health check
 app.get("/", (req, res) => {
   res.send("OK");
